@@ -1,0 +1,5 @@
+# User-specific stuff:
+.idea
+
+# Ignore bower_components
+/bower_components

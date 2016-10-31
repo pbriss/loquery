@@ -1,0 +1,23 @@
+html, body {
+    height: 100%;
+}
+
+body {
+    background: #fff;
+    color: #2c3646;
+    font-size: 1em;
+    font-family: 'Raleway', Arial, sans-serif;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+a {
+    color: #fff;
+    text-decoration: none;
+    outline: none;
+}
+
+a:hover,
+a:focus {
+    color: #8e82d7;
+}

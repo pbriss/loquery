@@ -9,12 +9,12 @@
     var rsingleTag = (/^<([a-z][^\/\0>:\x20\t\r\n\f]*)[\x20\t\r\n\f]*\/?>(?:<\/\1>|)$/i);
     var rquickExpr = /^(?:\s*(<[\w\W]+>)[^>]*|#([\w-]+))$/; // A simple way to check for HTML strings
 
-    var pQuery = function(selector, context) {
-        return new pQuery.fn.init(selector, context);
+    var loQuery = function(selector, context) {
+        return new loQuery.fn.init(selector, context);
     };
 
-    pQuery.fn = pQuery.prototype = {
-        constructor: pQuery,
+    loQuery.fn = loQuery.prototype = {
+        constructor: loQuery,
         length: 0,
         toArray: function() {
             return slice.call(this);
@@ -40,7 +40,7 @@
         },
     };
 
-    _.extend(pQuery.fn, {
+    _.extend(loQuery.fn, {
         find: function(selector) {
             var i, result,
                 len = this.length,
@@ -49,7 +49,7 @@
             result = this.pushStack([]);
 
             for (i = 0; i < len; i++) {
-                pQuery.find(selector, self[i], result);
+                loQuery.find(selector, self[i], result);
             }
 
             return len > 1 ? _.sortedUniq(result) : result;
@@ -62,7 +62,7 @@
         }
     });
 
-    var init = pQuery.fn.init = function(selector, context) {
+    var init = loQuery.fn.init = function(selector, context) {
         var elem, match;
 
         if (!selector) {
@@ -83,7 +83,7 @@
 
                 // CASE: pq(html) -> pq(array)
                 if (match[1]) {
-                    context = context instanceof pQuery ? context[0] : context;
+                    context = context instanceof loQuery ? context[0] : context;
 
                     // CASE: pq(html, props)
                     if (rsingleTag.test(match[1]) && _.isPlainObject(context)) {
@@ -106,7 +106,7 @@
                     elem = document.getElementById(match[2]);
 
                     if (elem) {
-                        // Inject the element into the pQuery object
+                        // Inject the element into the loQuery object
                         this[0] = elem;
                         this.length = 1;
                     }
@@ -130,10 +130,10 @@
         }
     };
 
-    init.prototype = pQuery.fn;
+    init.prototype = loQuery.fn;
 
-    root = pQuery(document);
+    root = loQuery(document);
 
-	_.query = window.pQuery = pQuery;
+	_.query = window.loQuery = loQuery;
 
 }(window._));

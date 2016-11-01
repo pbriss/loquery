@@ -1,2 +1,4 @@
-# pQuery
-Take a stab at rewriting jQuery
+# lQuery
+Rewrite jQuery using Lodash.
+
+We then extend the underscore Lodash object to contain the essential functionality of jQuery.

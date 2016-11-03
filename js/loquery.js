@@ -1,9 +1,10 @@
-;(function (_) {
+;(function (Sizzle, _) {
     'use strict';
 
     var root;
     var arr = [];
     var slice = arr.slice;
+    var splice = arr.splice;
     
     // Regular expressions
     var rsingleTag = (/^<([a-z][^\/\0>:\x20\t\r\n\f]*)[\x20\t\r\n\f]*\/?>(?:<\/\1>|)$/i);
@@ -12,6 +13,12 @@
     var loQuery = function(selector, context) {
         return new loQuery.fn.init(selector, context);
     };
+    
+    _.extend(loQuery, {
+        css: function(elem, prop, value) {
+            elem.style[prop] = value;
+        }
+    });
     
     loQuery.fn = loQuery.prototype = {
         constructor: loQuery,
@@ -29,7 +36,7 @@
         },
         pushStack: function(elems) {
     
-            // Build a new jQuery matched element set
+            // Build a new loQuery matched element set
             var result = _.merge(this.constructor(), elems);
     
             // Add the old object onto the stack (as a reference)
@@ -38,12 +45,8 @@
             // Return the newly-formed element set
             return result;
         },
+        splice: splice
     };
-    
-    // Support array iteration
-    if ( typeof Symbol === 'function' ) {
-        loQuery.fn[Symbol.iterator] = arr[Symbol.iterator];
-    }
     
     _.extend(loQuery.fn, {
         find: function(selector) {
@@ -54,7 +57,7 @@
             result = this.pushStack([]);
     
             for (i = 0; i < len; i++) {
-                loQuery.fn.find(selector, self[i], result);
+                loQuery.find(selector, self[i], result);
             }
     
             return len > 1 ? _.sortedUniq(result) : result;
@@ -63,7 +66,9 @@
     
         },
         css: function(prop, value) {
-            this.style[prop] = value;
+            _.each(this, function(elem) {
+                loQuery.css(elem, prop, value);
+            });
         }
     });
     
@@ -137,8 +142,11 @@
     
     init.prototype = loQuery.fn;
     
+    // Utilize Sizzle CSS selector engine
+    loQuery.find = Sizzle;
+    
     root = loQuery(document);
     
     _.query = window.loQuery = loQuery;
 
-}(window._));
+}(Sizzle, window._));

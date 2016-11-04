@@ -17,6 +17,9 @@
     _.extend(loQuery, {
         css: function(elem, prop, value) {
             elem.style[prop] = value;
+        },
+        addClass: function(elem, className) {
+            elem.classList.add(className);
         }
     });
     
@@ -63,12 +66,19 @@
             return len > 1 ? _.sortedUniq(result) : result;
         },
         parent: function() {
-    
+            return this[0].parentNode;
+        },
+        addClass: function(className) {
+            _.each(this, function(elem) {
+                loQuery.addClass(elem, className);
+            });
+            return this;
         },
         css: function(prop, value) {
             _.each(this, function(elem) {
                 loQuery.css(elem, prop, value);
             });
+            return this;
         }
     });
     

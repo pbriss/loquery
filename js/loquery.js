@@ -15,11 +15,14 @@
     };
     
     _.extend(loQuery, {
+        addClass: function(elem, className) {
+            elem.classList.add(className);
+        },
         css: function(elem, prop, value) {
             elem.style[prop] = value;
         },
-        addClass: function(elem, className) {
-            elem.classList.add(className);
+        hasClass: function(elem, className) {
+            return arr.includes.call(elem.classList, className);
         },
         removeClass: function(elem, className) {
             elem.classList.remove(className);
@@ -77,15 +80,24 @@
             });
             return this;
         },
-        removeClass: function(className) {
-            _.each(this, function(elem) {
-                loQuery.removeClass(elem, className);
-            });
-            return this;
-        },
         css: function(prop, value) {
             _.each(this, function(elem) {
                 loQuery.css(elem, prop, value);
+            });
+            return this;
+        },
+        hasClass: function(className) {
+            var hasClass = false;
+            _.each(this, function(elem) {
+                if (loQuery.hasClass(elem, className)) {
+                    hasClass = true;
+                }
+            });
+            return hasClass;
+        },
+        removeClass: function(className) {
+            _.each(this, function(elem) {
+                loQuery.removeClass(elem, className);
             });
             return this;
         }

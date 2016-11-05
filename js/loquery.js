@@ -96,11 +96,16 @@
             return hasClass;
         },
         removeClass: function(className) {
+            return this.each('removeClass', [className]);
+        },
+        each: function(fn, params) {
             _.each(this, function(elem) {
-                loQuery.removeClass(elem, className);
+                params.unshift(elem);
+                loQuery[fn].apply(this, params);
             });
             return this;
         }
+        
     });
     
     var init = loQuery.fn.init = function(selector, context) {

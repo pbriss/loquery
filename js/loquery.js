@@ -75,16 +75,10 @@
             return this[0].parentNode;
         },
         addClass: function(className) {
-            _.each(this, function(elem) {
-                loQuery.addClass(elem, className);
-            });
-            return this;
+            return this.each('addClass', className);
         },
         css: function(prop, value) {
-            _.each(this, function(elem) {
-                loQuery.css(elem, prop, value);
-            });
-            return this;
+            return this.each('css', prop, value);
         },
         hasClass: function(className) {
             var hasClass = false;
@@ -96,12 +90,14 @@
             return hasClass;
         },
         removeClass: function(className) {
-            return this.each('removeClass', [className]);
+            return this.each('removeClass', className);
         },
-        each: function(fn, params) {
+        each: function(fn) {
+            var args = arguments;
             _.each(this, function(elem) {
-                params.unshift(elem);
-                loQuery[fn].apply(this, params);
+                // Replace the first argument with the elem being evaluated
+                args[0] = elem;
+                loQuery[fn].apply(this, args);
             });
             return this;
         }

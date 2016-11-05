@@ -2,9 +2,6 @@
     'use strict';
 
     var root;
-    var arr = [];
-    var slice = arr.slice;
-    var splice = arr.splice;
     
     // Regular expressions
     var rsingleTag = (/^<([a-z][^\/\0>:\x20\t\r\n\f]*)[\x20\t\r\n\f]*\/?>(?:<\/\1>|)$/i);
@@ -15,30 +12,28 @@
     };
     
     _.extend(loQuery, {
-        addClass: function(elem, className) {
-            elem.classList.add(className);
+        // 'this' refers to the internal element being evaluated
+        addClass: function(className) {
+            this.classList.add(className);
         },
-        css: function(elem, prop, value) {
-            elem.style[prop] = value;
+        css: function(prop, value) {
+            this.style[prop] = value;
         },
-        hasClass: function(elem, className) {
-            return arr.includes.call(elem.classList, className);
+        hasClass: function(className) {
+            return arr.includes.call(this.classList, className);
         },
-        removeClass: function(elem, className) {
-            elem.classList.remove(className);
+        removeClass: function(className) {
+            this.classList.remove(className);
         }
     });
     
     loQuery.fn = loQuery.prototype = {
         constructor: loQuery,
         length: 0,
-        toArray: function() {
-            return slice.call(this);
-        },
         get: function(num) {
             // Return all the elements in a clean array
             if (num == null) {
-                return slice.call(this);
+                return _.slice(this);
             }
             // Return just the one element from the set
             return num < 0 ? this[num + this.length] : this[num];
@@ -54,10 +49,11 @@
             // Return the newly-formed element set
             return result;
         },
-        splice: splice
+        splice: [].splice
     };
     
     _.extend(loQuery.fn, {
+        // 'this' refers to loQuery.fn
         find: function(selector) {
             var i, result,
                 len = this.length,
@@ -75,10 +71,10 @@
             return this[0].parentNode;
         },
         addClass: function(className) {
-            return this.each('addClass', className);
+            return this.run('addClass', className);
         },
-        css: function(prop, value) {
-            return this.each('css', prop, value);
+        removeClass: function(className) {
+            return this.run('removeClass', className);
         },
         hasClass: function(className) {
             var hasClass = false;
@@ -89,19 +85,17 @@
             });
             return hasClass;
         },
-        removeClass: function(className) {
-            return this.each('removeClass', className);
+        css: function(prop, value) {
+            return this.run('css', prop, value);
         },
-        each: function(fn) {
-            var args = arguments;
+        run: function(fn) {
+            // Drop the first argument which is the fn name
+            var args = _.drop(arguments, 1);
             _.each(this, function(elem) {
-                // Replace the first argument with the elem being evaluated
-                args[0] = elem;
-                loQuery[fn].apply(this, args);
+                loQuery[fn].apply(elem, args);
             });
             return this;
         }
-        
     });
     
     var init = loQuery.fn.init = function(selector, context) {

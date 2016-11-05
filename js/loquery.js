@@ -20,6 +20,9 @@
         },
         addClass: function(elem, className) {
             elem.classList.add(className);
+        },
+        removeClass: function(elem, className) {
+            elem.classList.remove(className);
         }
     });
     
@@ -71,6 +74,12 @@
         addClass: function(className) {
             _.each(this, function(elem) {
                 loQuery.addClass(elem, className);
+            });
+            return this;
+        },
+        removeClass: function(className) {
+            _.each(this, function(elem) {
+                loQuery.removeClass(elem, className);
             });
             return this;
         },

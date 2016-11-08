@@ -89,8 +89,7 @@
             return this.run('css', prop, value);
         },
         run: function(fn) {
-            // Drop the first argument which is the fn name
-            var args = _.drop(arguments, 1);
+            var args = [].slice.call(arguments, 1);
             _.each(this, function(elem) {
                 loQuery[fn].apply(elem, args);
             });

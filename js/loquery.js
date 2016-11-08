@@ -20,10 +20,16 @@
             this.style[prop] = value;
         },
         hasClass: function(className) {
-            return arr.includes.call(this.classList, className);
+            return [].includes.call(this.classList, className);
         },
         removeClass: function(className) {
             this.classList.remove(className);
+        },
+        closest: function(selector) {
+            return this.closest(selector);
+        },
+        parent: function() {
+            return this.parentNode;
         }
     });
     
@@ -54,47 +60,58 @@
     
     _.extend(loQuery.fn, {
         // 'this' refers to loQuery.fn
-        find: function(selector) {
-            var i, result,
-                len = this.length,
-                self = this;
-    
-            result = this.pushStack([]);
-    
-            for (i = 0; i < len; i++) {
-                loQuery.find(selector, self[i], result);
-            }
-    
-            return len > 1 ? _.sortedUniq(result) : result;
-        },
         parent: function() {
-            return this[0].parentNode;
+            return this.matches('parent');
+        },
+        closest: function(selector) {
+            return this.matches('closest', selector);
         },
         addClass: function(className) {
-            return this.run('addClass', className);
+            return this.apply('addClass', className);
         },
         removeClass: function(className) {
-            return this.run('removeClass', className);
+            return this.apply('removeClass', className);
         },
         hasClass: function(className) {
-            var hasClass = false;
-            _.each(this, function(elem) {
-                if (loQuery.hasClass(elem, className)) {
-                    hasClass = true;
-                }
-            });
-            return hasClass;
+            return this.matches('hasClass', className).length > 0;
         },
         css: function(prop, value) {
-            return this.run('css', prop, value);
+            return this.apply('css', prop, value);
         },
-        run: function(fn) {
-            var args = [].slice.call(arguments, 1);
+        apply: function(fn) {
+            var args = _.slice(arguments, 1);
             _.each(this, function(elem) {
                 loQuery[fn].apply(elem, args);
             });
             return this;
-        }
+        },
+        matches: function(fn) {
+            var current,
+                len = this.length,
+                result = [],
+                args = _.slice(arguments, 1);
+            
+            _.each(this, function(elem) {
+                current = loQuery[fn].apply(elem, args);
+                if (current) {
+                    result.push(current);
+                }
+            });
+            
+            return len > 1 ? _.sortedUniq(result) : result;
+        },
+        find: function(selector) {
+            var result,
+                len = this.length;
+        
+            result = this.pushStack([]);
+    
+            _.each(this, function(elem) {
+                loQuery.find(selector, elem, result);
+            });
+        
+            return len > 1 ? _.sortedUniq(result) : result;
+        },
     });
     
     var init = loQuery.fn.init = function(selector, context) {

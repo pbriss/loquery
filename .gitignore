@@ -3,3 +3,5 @@
 
 # Ignore bower_components
 /bower_components
+
+js/jquery.js
